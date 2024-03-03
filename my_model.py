@@ -64,7 +64,7 @@ def make_model_test():
     model = Model(inputs=[board_input, action_input], outputs=policy_output)
     #opt = SGD(lr=0.000000001)
     #opt = Nadam(lr=0.00001)
-    opt = Nadam(lr=0.001)
+    opt = Nadam(learning_rate=0.001)
     #opt = RMSprop()
     model.compile(loss='mse', optimizer=opt)
     return model   
