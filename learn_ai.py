@@ -268,7 +268,7 @@ if __name__ == '__main__':
             if n == 0:
                 print('В первой игре победил =', all_rewards[0])
                 
-            if n != 0 and n % 20 == 0:    
+            if n != 0 and n % 1 == 0:    
                 print('\r{}  {}  {} %             '.format(iteration, n / n_games_per_update * 100, (win_ai) / (win_ai + win_bot) * 100), end='')
             
             
