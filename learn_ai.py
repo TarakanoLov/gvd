@@ -187,7 +187,7 @@ if __name__ == '__main__':
                         print(player2)
                         print('\n\n')
                         #print('вероятность победы', (random_forest.predict(np.concatenate([all_game_situation[-1], card_to_use[-1], gen_all_card_other[-1], card_deck_hod[-1]], axis=0).reshape(1, -1)) + 1) / 2, '%')    
-                        print('вероятность победы', (critic.predict(critic_scaller.transform(np.concatenate([all_game_situation[-1], card_to_use[-1], gen_all_card_other[-1], card_deck_hod[-1]], axis=0).reshape(1, -1))) + 1) / 2, '%')
+                        print('вероятность победы', (critic.predict(critic_scaller.transform(np.concatenate([all_game_situation[-1], card_to_use[-1], gen_all_card_other[-1], card_deck_hod[-1]], axis=0).reshape(1, -1)), verbose=0) + 1) / 2, '%')
                         for i in range(len(arr)):
                             print(arr[i][0], arr[i][1])
                         print('\n\n')
