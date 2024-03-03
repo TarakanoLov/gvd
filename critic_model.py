@@ -19,9 +19,9 @@ from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.ensemble import GradientBoostingRegressor, GradientBoostingClassifier
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.linear_model import LogisticRegression
-from contextualbandits.online import BootstrappedUCB, BootstrappedTS, \
-            SeparateClassifiers, EpsilonGreedy, AdaptiveGreedy, ExploreFirst, \
-            ActiveExplorer, SoftmaxExplorer
+#from contextualbandits.online import BootstrappedUCB, BootstrappedTS, \
+ #           SeparateClassifiers, EpsilonGreedy, AdaptiveGreedy, ExploreFirst, \
+  #          ActiveExplorer, SoftmaxExplorer
 from copy import deepcopy
 
 import numpy as np
