@@ -8,9 +8,9 @@ import tensorflow_probability as tfp
 import numpy as np
 
 from sklearn.linear_model import LogisticRegression
-from contextualbandits.online import BootstrappedUCB, BootstrappedTS, \
-            SeparateClassifiers, EpsilonGreedy, AdaptiveGreedy, ExploreFirst, \
-            ActiveExplorer, SoftmaxExplorer
+#from contextualbandits.online import BootstrappedUCB, BootstrappedTS, \
+ #           SeparateClassifiers, EpsilonGreedy, AdaptiveGreedy, ExploreFirst, \
+  #          ActiveExplorer, SoftmaxExplorer
 from copy import deepcopy
 
 
