@@ -87,7 +87,7 @@ with open('random_forest.pickle', 'rb') as file:
     random_forest = pickle.load(file)
     
 def gen_array(model, player1, player2):
-    return model.predict([new_all_game_situation_scaller.transform(gen_array_input(player1, player2)), gen_my_all_card(player1)])
+    return model.predict([new_all_game_situation_scaller.transform(gen_array_input(player1, player2)), gen_my_all_card(player1)], verbose=0)
 
 #import my_models.new_model_78.policy as myNewAIaget
 #model = my_model.make_model_79_5()
