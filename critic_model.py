@@ -45,7 +45,7 @@ def make_shok_critic():
     output = Dense(1, activation='tanh')(x)
 
     model = Model(input, output, name="encoder")
-    opt = Nadam(lr=0.00005)
+    opt = Nadam(learning_rate=0.00005)
     model.compile(optimizer=opt, loss='mse')
     return model
     
@@ -68,7 +68,7 @@ def make_critic_model():
     model = Model(inputs=board_input, outputs=value_output)
     
     #opt = Nadam(lr=0.00005)
-    opt = Nadam(lr=0.001)
+    opt = Nadam(learning_rate=0.001)
     model.compile(loss=keras_custom_loss, optimizer=opt, metrics=['mae', 'mse'])
     return model
 
