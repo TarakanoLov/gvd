@@ -12,11 +12,12 @@ from keras.optimizers import SGD
 
 import my_model
 
-import cards
+from base_game import cards
 import learn_ai
-import card_deck
-import player
-import game
+from base_game import card_deck
+from base_game import player
+from base_game import game
+
 from my_models.old_model_71.policy import Agent as OldAIagent
 from my_models.new_model_78.policy import Agent as myNewAIaget
 

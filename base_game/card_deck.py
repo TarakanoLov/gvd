@@ -2,7 +2,7 @@ import numpy as np
 
 import random
 
-import cards
+from . import cards
 
 class Fake_card_deck:
     def __init__(self, cards):

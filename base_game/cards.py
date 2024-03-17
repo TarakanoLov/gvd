@@ -1,7 +1,7 @@
 import copy
 
-import card_deck
-import player
+from . import card_deck
+from . import player
 
 
 class Card:

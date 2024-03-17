@@ -129,8 +129,8 @@ def gen_array_input(player1, player2):
 
 import copy
 
-import card_deck
-import player
+import base_game.card_deck
+import base_game.player
 
 
 class Card:

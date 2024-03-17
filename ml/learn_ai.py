@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '..')
+
 import random
 import os
 from collections import deque
@@ -19,10 +22,12 @@ import pickle
 
 import numpy as np
 
-import game
-import player
-import cards
-import card_deck
+
+
+from base_game import game
+from base_game import player
+from base_game import cards
+from base_game import card_deck
 import agent
 import critic_model
 
