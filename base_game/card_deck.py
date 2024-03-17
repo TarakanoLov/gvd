@@ -6,7 +6,7 @@ from . import cards
 
 class Fake_card_deck:
     def __init__(self, cards):
-        self.cards = cards
+        self.cards = cards.copy()
 
     def generate_start_cards(self):
         return [self.new_card() for _ in range(7)]
@@ -36,9 +36,9 @@ class Random_card_deck:
             return self.new_card()
             
     def to_array(self):
-        arr = np.full((34 * 3,), 100)
+        arr = np.full((34 * 3,), 120)
         for ind, one_card in enumerate(self.all_cards):
-            arr[cards.id_of(one_card)] = ind
+            arr[cards.id_of(one_card)] = len(self.all_cards) - ind - 1
         return arr
         
 def card_deck_for_two():
