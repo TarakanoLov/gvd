@@ -62,8 +62,8 @@ class Player:
         self.add_mana(self.monastery)
         self.add_squad(self.barracks)
         
-    def win(self, player2):
-        return self.tower >= 50 or player2.tower <= 0
+    def game_ended(self, player2):
+        return self.tower >= 50 or self.tower <= 0 or player2.tower >= 50 or player2.tower <= 0
         
 def make_2_players(seed = None):
     cd1, cd2 = card_deck.card_deck_for_two(seed)

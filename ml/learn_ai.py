@@ -34,7 +34,7 @@ import critic_model
 
 n_inputs = 2 + 2 + 6 + 6
 n_games_per_update = 100
-n_max_steps = 100
+n_max_steps = 1000
 n_iterations = 1000001
     
 def choose_move_from_array(arr, player, only_drop=False, eps=0.3):
@@ -156,9 +156,7 @@ if __name__ == '__main__':
             
             for i in range(n_max_steps):
                 player1.get_new_resource()
-                #while True:
                 for gggg in range(1):
-                    #action_val, base = myNewAIaget.make_predict(player1, player2)
                     action_val, base = make_predict(player1, player2)                   
                     
                     is_use, card_to_move = choose_move_from_array(action_val, player1, only_drop)
@@ -172,10 +170,7 @@ if __name__ == '__main__':
                     all_game_situation.append(gen_array_input(player1, player2)[0])
                     card_to_use.append(gen_my_all_card(player1)[0])
                     gen_all_card_other.append(gen_my_all_card(player2)[0])
-                    
-                    #action_val_array.append(action_val - base)
-
-                        
+                       
                     if n == 0 and i == 10:
                         arr = []
                         for i in range(len(action_val)):
@@ -203,9 +198,6 @@ if __name__ == '__main__':
                     next_move_too = False
                     if is_use:
                         next_move_too, only_drop = card_to_move.use(player1, player2)
-                        if player1.win(player2):
-                            who_win = 1
-                            break
                     else:
                         player1.drop(card_to_move)
                         
@@ -213,15 +205,13 @@ if __name__ == '__main__':
                     if not next_move_too:
                         break
                         
-                if player1.win(player2):
+                if player1.game_ended(player2):
                     break
                     
                 only_drop = False
                 next_move_too = False
                 player2.get_new_resource()
-                #while True:
                 for gggg in range(1):
-                    #action_val, base = myNewAIaget.make_predict(player2, player1)
                     action_val, base = make_predict(player2, player1)
 
                     is_use, card_to_move = choose_move_from_array(action_val, player2, only_drop)
@@ -236,28 +226,22 @@ if __name__ == '__main__':
                     gen_all_card_other_second.append(gen_my_all_card(player1)[0])
                     
                         
-                        
-                    
                     current_rewards_second.append(player1.tower - player2.tower)    
                     next_move_too = False
                     only_drop = False
                     if is_use:
                         next_move_too, only_drop = card_to_move.use(player2, player1)
-                        if player2.win(player1):
-                            who_win = 2
-                            if is_use:
-                                pass
-                            break
                     else:
                         player2.drop(card_to_move)
                     
                     if not next_move_too:
                         break
                         
-                if player2.win(player1):
+                if player2.game_ended(player1):
                     break     
                                
-            if who_win == 1 or player1.tower > player2.tower:
+            if player1.tower >= 50 or player2.tower <= 0:
+                assert player2.tower <= 0 or player1.tower >= 50
                 win_ai += 1
                 all_rewards.extend([0.9 for i in range(len(current_rewards))])
                 all_rewards_second.extend([-0.9 for i in range(len(current_rewards_second))])
@@ -265,6 +249,7 @@ if __name__ == '__main__':
                 game_before_end.extend([len(current_rewards) - i for i in range(len(current_rewards))])
                 game_before_end_second.extend([len(current_rewards_second) - i for i in range(len(current_rewards_second))])
             else:
+                assert player2.tower >= 50 or player1.tower <= 0
                 win_bot += 1
                 all_rewards_second.extend([0.9 for i in range(len(current_rewards_second))])
                 all_rewards.extend([-0.9 for i in range(len(current_rewards))])
@@ -273,7 +258,7 @@ if __name__ == '__main__':
             if n == 0:
                 print('В первой игре победил =', all_rewards[0])
                 
-            if n != 0 and n % 1 == 0:    
+            if n != 0 and n % 100 == 0:
                 print('\r{}  {}  {} %             '.format(iteration, n / n_games_per_update * 100, (win_ai) / (win_ai + win_bot) * 100), end='')
             
             
