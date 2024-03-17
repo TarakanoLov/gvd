@@ -12,34 +12,42 @@ class Player:
             self.tower, self.wall, self.mine, self.monastery, self.barracks, self.ore, self.mana, self.squad)
 
     def add_tower(self, integer):
+        assert self.tower >= 1
         self.tower = max(0, self.tower + integer)
 
     def add_wall(self, integer):
+        assert self.wall >= 0
         self.wall = max(0, self.wall + integer)
         
     def add_mine(self, integer):
+        assert self.mine >= 0
         self.mine = max(0, self.mine + integer)
         
     def add_monastery(self, integer):
+        assert self.monastery >= 0
         self.monastery = max(0, self.monastery + integer)
         
     def add_barracks(self, integer):
+        assert self.barracks >= 0
         self.barracks = max(0, self.barracks + integer)
 
     def add_ore(self, integer):
+        assert self.ore >= 0
         self.ore = max(0, self.ore + integer)
         
     def add_mana(self, integer):
+        assert self.mana >= 0
         self.mana = max(0, self.mana + integer)
         
     def add_squad(self, integer):
+        assert self.squad >= 0
         self.squad = max(0, self.squad + integer)
         
     def make_damage(self, damage):
         assert damage >= 0
-        if damage >= self.wall:
-           self.add_wall(-self.wall)
+        if damage > self.wall:
            self.add_tower(-(damage - self.wall))
+           self.wall = 0
         else:
            self.add_wall(-damage)
            

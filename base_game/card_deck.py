@@ -18,7 +18,9 @@ class Fake_card_deck:
             return None
 
 class Random_card_deck:
-    def __init__(self):
+    def __init__(self, seed = None):
+        if seed is not None:
+            random.seed(seed)
         self.all_cards = cards.all_cards.copy()
         random.shuffle(self.all_cards)
         
