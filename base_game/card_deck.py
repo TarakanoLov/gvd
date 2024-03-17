@@ -40,9 +40,9 @@ class Random_card_deck:
         for ind, one_card in enumerate(self.all_cards):
             arr[cards.id_of(one_card)] = len(self.all_cards) - ind - 1
         return arr
-        
-def card_deck_for_two():
-    rcd = Random_card_deck()
+
+def card_deck_for_two(seed = None):
+    rcd = Random_card_deck(seed)
     arr_cards = [rcd.new_card() for i in range(len(rcd.all_cards)//2)]
     rcd2 = Random_card_deck()
     rcd2.all_cards = arr_cards

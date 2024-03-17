@@ -31,6 +31,7 @@ class Card:
                 user.add_squad(-self.cost)
             user.drop(self)
             return self.func(user, other)
+        assert False
             
     def is_can_use(self, user):
         if self.type_card == 0:
@@ -48,6 +49,7 @@ class Card:
                 return True
             else:
                 return False
+        assert False
 
 
 def cr1(user, other):
@@ -625,11 +627,8 @@ all_cards = [Card('Бракованная руда', 0, cr1, 0), Card('Земл�
              
 map_name_too_card = {card.name.upper() : card for card in all_cards}
 
-
 for i in range(len(all_cards)):
     all_cards[i].index = i
 
-
-    
 def id_of(card):
     return card.index

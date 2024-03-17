@@ -1,3 +1,5 @@
+from base_game import card_deck
+
 class Player:
     def __init__(self, card_deck, start_tower = 20, start_wall = 5, start_mine = 2, start_monastery = 2, start_barracks = 2, start_ore = 5, start_mana = 5, start_squad = 5, name = ''):
         self.name = name
@@ -62,3 +64,7 @@ class Player:
         
     def win(self, player2):
         return self.tower >= 50 or player2.tower <= 0
+        
+def make_2_players(seed = None):
+    cd1, cd2 = card_deck.card_deck_for_two(seed)
+    return Player(cd1), Player(cd2)
