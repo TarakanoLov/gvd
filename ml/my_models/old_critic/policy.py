@@ -25,6 +25,7 @@ from sklearn.linear_model import LogisticRegression
 from copy import deepcopy
 
 import numpy as np
+import pickle
 
 def keras_custom_loss(y_actual, y_predicted):
     error = K.abs(y_actual - y_predicted)
@@ -67,8 +68,25 @@ def make_critic_model():
 
     model = Model(inputs=board_input, outputs=value_output)
     
-    #opt = Nadam(lr=0.00005)
     opt = Nadam(learning_rate=0.001)
     model.compile(loss=keras_custom_loss, optimizer=opt, metrics=['mae', 'mse'])
     return model
 
+class Critic:
+    is_load = False
+    
+    def __init__(self):
+        if not Critic.is_load:
+            Critic.is_load = True
+            Critic.model = make_critic_model()
+            Critic.model.load_weights('my_models/old_critic/variants/amazing_new_critic.h5')
+            
+            with open('my_models/old_critic/critic_scaller.pkl', 'rb') as file:
+                Critic.scaller = pickle.load(file)
+                
+    def fit(self, x, y, *args, **kwargs):
+        Critic.model.fit(Critic.scaller.transform(x), y, *args, **kwargs)
+        Critic.model.save_weights('my_models/old_critic/variants/amazing_new_critic.h5')
+    
+    def predict(self, x, *args, **kwargs):
+        return Critic.model.predict(Critic.scaller.transform(x), *args, **kwargs)

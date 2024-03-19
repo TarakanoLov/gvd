@@ -16,7 +16,7 @@ def choose_move_from_array(arr, player, only_drop=False, eps=0.3):
         el = max(arr_result, key = lambda x : x[1])
         return el[0], el[2]
 
-def print_for_learn(action_val, player1, player2, critic, critic_scaller, all_game_situation, card_to_use, gen_all_card_other, card_deck_hod):
+def print_for_learn(action_val, player1, player2, critic, all_game_situation, card_to_use, gen_all_card_other, card_deck_hod):
     arr = []
     for i in range(len(action_val)):
         if cards.all_cards[i % len(cards.all_cards)] in player1.cards:
@@ -31,7 +31,7 @@ def print_for_learn(action_val, player1, player2, critic, critic_scaller, all_ga
     print('\n\n')
     print(player2)
     print('\n\n')
-    print('вероятность победы', (critic.predict(critic_scaller.transform(np.concatenate([all_game_situation[-1], card_to_use[-1], gen_all_card_other[-1], card_deck_hod[-1]], axis=0).reshape(1, -1)), verbose=0) + 1) / 2, '%')
+    print('вероятность победы', (critic.predict(np.concatenate([all_game_situation[-1], card_to_use[-1], gen_all_card_other[-1], card_deck_hod[-1]], axis=0).reshape(1, -1), verbose=0) + 1) / 2, '%')
     for i in range(len(arr)):
         print(arr[i][0], arr[i][1])
     print('\n\n')

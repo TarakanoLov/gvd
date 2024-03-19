@@ -13,10 +13,10 @@ from base_game import player
 from base_game import cards
 from base_game import card_deck
 import agent
-import critic_model
 import helpers
 
 from my_models.current_model.policy import Agent as CurrentModel
+from my_models.old_critic.policy import Critic
 
 n_games_per_update = 100
 n_max_steps = 1000
@@ -25,11 +25,7 @@ def isclose(a, b, abs_tol=0.001):
     return abs(a-b) <= abs_tol
 
 if __name__ == '__main__':
-    critic = critic_model.make_critic_model()
-    critic.load_weights('amazing_new_critic.h5')
-
-    with open('critic_scaller.pkl', 'rb') as file:
-        critic_scaller = pickle.load(file)
+    critic = Critic()
     
     for iteration in range(1000001):
         all_rewards = []
@@ -79,7 +75,7 @@ if __name__ == '__main__':
                     gen_all_card_other.append(player2.gen_my_all_card()[0])
                        
                     if n == 0 and i == 10:
-                        helpers.print_for_learn(action_val, player1, player2, critic, critic_scaller, all_game_situation, card_to_use, gen_all_card_other, card_deck_hod)
+                        helpers.print_for_learn(action_val, player1, player2, critic, all_game_situation, card_to_use, gen_all_card_other, card_deck_hod)
 
 
                     current_rewards.append(player1.tower - player2.tower)                                  
@@ -167,7 +163,7 @@ if __name__ == '__main__':
 
         new_card_to_use = np.asarray(card_to_use)
         new_all_rewards = np.asarray(all_rewards)
-        sss = critic.predict(critic_scaller.transform(np.concatenate([new_all_game_situation, new_card_to_use, new_gen_all_card_other, new_card_deck_hod], axis=1)))
+        sss = critic.predict(np.concatenate([new_all_game_situation, new_card_to_use, new_gen_all_card_other, new_card_deck_hod], axis=1))
         
         need_to_delete = []
         step = 5
@@ -220,15 +216,13 @@ if __name__ == '__main__':
         
         ### critic
         base_inp = np.concatenate([new_all_game_situation, new_card_to_use, new_gen_all_card_other, new_card_deck_hod], axis=1)
-        print('точность критика =', np.isclose(critic.predict(critic_scaller.transform(base_inp)).reshape(1, -1), reward_for_critic.reshape(1, -1), 0, 0.89).sum() / len(base_inp) * 100, '%')
+        print('точность критика =', np.isclose(critic.predict(base_inp).reshape(1, -1), reward_for_critic.reshape(1, -1), 0, 0.89).sum() / len(base_inp) * 100, '%')
         l = int(len(base_inp)*0.8)
         idx = np.random.randint(l, size=l // 10)
         inp = base_inp[idx, :]
         #print(reward_for_critic)
         #if iteration % 10 == 0:
         #    print('input for critic, input = ', critic_scaller.transform(inp[0].reshape(1, -1)), 'output =', reward_for_critic[0])
-        #    critic.fit(critic_scaller.transform(inp), reward_for_critic[idx], shuffle=True, batch_size=64, epochs=1)
-        #    critic.save_weights('amazing_new_critic.h5')
+        #    critic.fit(inp, reward_for_critic[idx], shuffle=True, batch_size=64, epochs=1)
         
-        #critic.fit(critic_scaller.transform(inp), reward_for_critic[idx], shuffle=True, batch_size=64, epochs=1)
-        #critic.save_weights('amazing_new_critic.h5')
+        #critic.fit(inp, reward_for_critic[idx], shuffle=True, batch_size=64, epochs=1)
