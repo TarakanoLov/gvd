@@ -14,7 +14,7 @@ class Player:
             self.tower, self.wall, self.mine, self.monastery, self.barracks, self.ore, self.mana, self.squad)
 
     def add_tower(self, integer):
-        assert self.tower >= 1
+        #assert self.tower >= 1
         self.tower = max(0, self.tower + integer)
 
     def add_wall(self, integer):
@@ -64,6 +64,9 @@ class Player:
         
     def game_ended(self, player2):
         return self.tower >= 50 or self.tower <= 0 or player2.tower >= 50 or player2.tower <= 0
+    
+    def win(self, player2):
+        return self.tower >= 50 or player2.tower <= 0
         
 def make_2_players(seed = None):
     cd1, cd2 = card_deck.card_deck_for_two(seed)

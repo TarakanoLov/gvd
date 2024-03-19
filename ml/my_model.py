@@ -42,30 +42,16 @@ def make_model_test():
     n_inputs = 2 + 2 + 6 + 6 #+ (34 + 34 + 34) #* 2
     
     board_input = Input(shape=(n_inputs,), name='board_input')
-    #x = BatchNormalization()(board_input)
-    #x = tf.keras.layers.experimental.preprocessing.Normalization(board_input)
     x = Dense(64, activation='selu')(board_input)
-    #x = BatchNormalization()(x)
     x = Dense(64, activation='selu')(x)
-    #x = BatchNormalization()(x)
-    #x = Dropout(0.2)(x)
-    #action_layer3 = Dense(32, activation='relu')(action_layer2)
-    #action_layer4 = Dense(32, activation='relu')(action_layer3)
-    #action_layer5 = Dense(32, activation='relu')(action_layer4)
-    #action_layer6 = Dense(32, activation='relu')(action_layer5)
     
     action_input = Input(shape=(34 * 3 * 2,), name='action_input')
     
-    
-    #use_and_drop = concatenate([board_layer2, action_layer2], axis=1, name='board_and_action')
     policy_output = Multiply()([action_input, Dense(34 * 3 * 2, activation='tanh')(x)])
     
 
     model = Model(inputs=[board_input, action_input], outputs=policy_output)
-    #opt = SGD(lr=0.000000001)
-    #opt = Nadam(lr=0.00001)
     opt = Nadam(learning_rate=0.001)
-    #opt = RMSprop()
     model.compile(loss='mse', optimizer=opt)
     return model   
     
