@@ -41,7 +41,7 @@ class Agent(player.Player):
            Agent.model = make_model()
            Agent.model.load_weights('my_models/current_model/variants/model.h5')
         
-        action_val = gen_array(Agent.model, self, other)
+        action_val = self.gen_array(other)
         action_val = action_val[0]    
         
         return helpers.choose_move_from_array(action_val, self, only_drop, 0.0)
