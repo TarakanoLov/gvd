@@ -23,6 +23,34 @@ n_max_steps = 1000
 
 def isclose(a, b, abs_tol=0.001):
     return abs(a-b) <= abs_tol
+    
+def one_move_logic(player1, player2, card_with_is_use, card_deck_hod, all_game_situation, card_to_use, gen_all_card_other):
+    action_val, base = player1.make_predict(player2)                   
+                    
+    is_use, card_to_move = helpers.choose_move_from_array(action_val, player1, False)
+    
+    if is_use:
+        card_with_is_use.append(cards.id_of(card_to_move))
+    else:
+        card_with_is_use.append(len(cards.all_cards) + cards.id_of(card_to_move))
+    
+    card_deck_hod.append(np.concatenate([player1.card_deck.to_array(), player2.card_deck.to_array()], axis=0))
+    all_game_situation.append(player1.gen_array_input(player2)[0])
+    card_to_use.append(player1.gen_my_all_card()[0])
+    gen_all_card_other.append(player2.gen_my_all_card()[0])
+       
+    if n == 0 and i == 10:
+        helpers.print_for_learn(action_val, player1, player2, critic, all_game_situation, card_to_use, gen_all_card_other, card_deck_hod)
+
+
+    current_rewards.append(player1.tower - player2.tower)                                  
+    only_drop = False
+    next_move_too = False
+    if is_use:
+        next_move_too, only_drop = card_to_move.use(player1, player2)
+    else:
+        player1.drop(card_to_move)
+        
 
 if __name__ == '__main__':
     critic = Critic()
@@ -59,47 +87,17 @@ if __name__ == '__main__':
             
             for i in range(n_max_steps):
                 player1.get_new_resource()
-                for gggg in range(1):
-                    action_val, base = player1.make_predict(player2)                   
-                    
-                    is_use, card_to_move = helpers.choose_move_from_array(action_val, player1, False)
-                    
-                    if is_use:
-                        card_with_is_use.append(cards.id_of(card_to_move))
-                    else:
-                        card_with_is_use.append(len(cards.all_cards) + cards.id_of(card_to_move))
-                    
-                    card_deck_hod.append(np.concatenate([player1.card_deck.to_array(), player2.card_deck.to_array()], axis=0))
-                    all_game_situation.append(player1.gen_array_input(player2)[0])
-                    card_to_use.append(player1.gen_my_all_card()[0])
-                    gen_all_card_other.append(player2.gen_my_all_card()[0])
-                       
-                    if n == 0 and i == 10:
-                        helpers.print_for_learn(action_val, player1, player2, critic, all_game_situation, card_to_use, gen_all_card_other, card_deck_hod)
-
-
-                    current_rewards.append(player1.tower - player2.tower)                                  
-                    only_drop = False
-                    next_move_too = False
-                    if is_use:
-                        next_move_too, only_drop = card_to_move.use(player1, player2)
-                    else:
-                        player1.drop(card_to_move)
-                        
-                        
-                    if not next_move_too:
-                        break
+                one_move_logic(player1, player2, card_with_is_use, card_deck_hod, all_game_situation, card_to_use, gen_all_card_other)
                         
                 if player1.game_ended(player2):
                     break
                     
-                only_drop = False
-                next_move_too = False
+
                 player2.get_new_resource()
                 for gggg in range(1):
                     action_val, base = player2.make_predict(player1)
 
-                    is_use, card_to_move = helpers.choose_move_from_array(action_val, player2, only_drop)
+                    is_use, card_to_move = helpers.choose_move_from_array(action_val, player2, False)
                     if is_use:
                         card_with_is_use_second.append(cards.id_of(card_to_move))
                     else:
