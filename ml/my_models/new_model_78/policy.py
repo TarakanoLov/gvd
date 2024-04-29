@@ -7,9 +7,6 @@ import tensorflow as tf
 import numpy as np
 import pickle
 
-with open('my_models/new_model_78/new_all_game_situation_scaller.pkl', 'rb') as file:
-    new_all_game_situation_scaller = pickle.load(file)
-
 def make_model_test():
     n_inputs = 2 + 2 + 6 + 6 #+ (34 + 34 + 34) #* 2
     
@@ -777,8 +774,8 @@ def choose_move_from_array(arr, player, only_drop=False):
 def gen_array(model, player1, player2):
     return model.predict([new_all_game_situation_scaller.transform(gen_array_input(player1, player2)), gen_my_all_card(player1)])
 
-model = make_model_test()
-model.load_weights('my_models/new_model_78/variants/actor_78.h5')
+#model = make_model_test()
+#model.load_weights('my_models/new_model_78/variants/actor_78.h5')
 
 def make_predict(player1, player2):
     action_val = gen_array(model, player1, player2)  
@@ -794,6 +791,9 @@ class Agent(Player):
         if not Agent.is_load:
             Agent.is_load = True
 
+            with open('my_models/new_model_78/new_all_game_situation_scaller.pkl', 'rb') as file:
+                new_all_game_situation_scaller = pickle.load(file)
+    
             Agent.model = make_model_test()
             Agent.model.load_weights('my_models/new_model_78/variants/actor_78.h5') # ебанный блять в рот нахуй я не понимаю блять как сделать чтобы по относительному пути блять подгружать хуйню эту блять
             

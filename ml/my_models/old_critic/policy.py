@@ -33,14 +33,13 @@ def keras_custom_loss(y_actual, y_predicted):
     linear_error  = 2 * (error - clipped_error)
     return K.square(clipped_error) + linear_error
 
-def make_shok_critic():
+def make_new_critic():
     input = Input(shape=(628,))
     x = BatchNormalization()(input)
-    x = Dropout(0.2)(x)
-    x = Dense(256, activation='selu')(x)
+    x = Dense(16, activation='selu')(x)
     x = BatchNormalization()(x)
     x = Dropout(0.2)(x)
-    x = Dense(256, activation='selu')(x)
+    x = Dense(8, activation='selu')(x)
     x = BatchNormalization()(x)
     x = Dropout(0.2)(x)
     output = Dense(1, activation='tanh')(x)
@@ -53,13 +52,10 @@ def make_shok_critic():
 #tf.keras.mixed_precision.experimental.set_policy('mixed_float16')
 def make_critic_model():
     board_input = Input(shape=(628,))
-    #l = tf.keras.layers.LayerNormalization(axis=1)
-    #x = l(board_input)
     x = BatchNormalization()(board_input)
-    #x = AlphaDropout(0.05)(x)
     x = Dense(128, activation='selu')(x)
     x = BatchNormalization()(x)
-    #x = Dropout(0.2)(x)
+    x = Dropout(0.5)(x)
     x = Dense(64, activation='selu')(x)
     x = BatchNormalization()(x)
     x = Dropout(0.5)(x)
@@ -68,8 +64,9 @@ def make_critic_model():
 
     model = Model(inputs=board_input, outputs=value_output)
     
-    opt = Nadam(learning_rate=0.001)
-    model.compile(loss=keras_custom_loss, optimizer=opt, metrics=['mae', 'mse'])
+    opt = Nadam(learning_rate=0.00001)
+    #model.compile(loss=keras_custom_loss, optimizer=opt, metrics=['mae', 'mse'])
+    model.compile(loss='mse', optimizer=opt, metrics=['mae', 'mse'])
     return model
 
 class Critic:
@@ -78,15 +75,17 @@ class Critic:
     def __init__(self):
         if not Critic.is_load:
             Critic.is_load = True
-            Critic.model = make_critic_model()
+            Critic.model = make_new_critic()
             Critic.model.load_weights('my_models/old_critic/variants/amazing_new_critic.h5')
             
             with open('my_models/old_critic/critic_scaller.pkl', 'rb') as file:
                 Critic.scaller = pickle.load(file)
                 
     def fit(self, x, y, *args, **kwargs):
-        Critic.model.fit(Critic.scaller.transform(x), y, *args, **kwargs)
+        #Critic.model.fit(Critic.scaller.transform(x), y, *args, **kwargs)
+        Critic.model.fit(x, y, *args, **kwargs)
         Critic.model.save_weights('my_models/old_critic/variants/amazing_new_critic.h5')
     
     def predict(self, x, *args, **kwargs):
+        #return Critic.model.predict(Critic.scaller.transform(x), *args, **kwargs)
         return Critic.model.predict(Critic.scaller.transform(x), *args, **kwargs)

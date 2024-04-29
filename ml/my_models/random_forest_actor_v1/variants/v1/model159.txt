@@ -1,0 +1,227 @@
+tree
+version=v3
+num_class=1
+num_tree_per_iteration=1
+label_index=0
+max_feature_idx=15
+objective=regression
+feature_names=Column_0 Column_1 Column_2 Column_3 Column_4 Column_5 Column_6 Column_7 Column_8 Column_9 Column_10 Column_11 Column_12 Column_13 Column_14 Column_15
+feature_infos=[3:46] [0:39] [5:49] [0:42] [0:6] [1:7] [0:7] [0:98] [2:112] [0:164] [0:6] [1:5] [0:7] [0:83] [0:58] [0:106]
+tree_sizes=620 704 622 624 624
+
+Tree=0
+num_leaves=6
+num_cat=0
+split_feature=0 12 6 0 2
+split_gain=14.5317 7.70318 3.42989 1.49284 0.80371
+threshold=25.500000000000004 2.5000000000000004 3.5000000000000004 20.500000000000004 21.500000000000004
+decision_type=2 2 2 2 2
+left_child=2 -2 3 4 -1
+right_child=1 -3 -4 -5 -6
+leaf_value=-0.40098643728490507 -0.29432581951862863 -0.36928603221666201 -0.356099218942516 -0.38267064768992021 -0.42467064796807519
+leaf_weight=38 29 26 21 30 23
+leaf_count=38 29 26 21 30 23
+internal_value=-0.371856 -0.329762 -0.392528 -0.400934 -0.409917
+internal_weight=0 55 112 91 61
+internal_count=167 55 112 91 61
+shrinkage=1
+
+
+Tree=1
+num_leaves=7
+num_cat=0
+split_feature=0 12 6 8 11 7
+split_gain=11.7707 6.23958 2.77821 1.26752 2.04819 0.095437
+threshold=25.500000000000004 2.5000000000000004 3.5000000000000004 7.5000000000000009 2.5000000000000004 8.5000000000000018
+decision_type=2 2 2 2 2 2
+left_child=2 -2 3 5 -5 -1
+right_child=1 -3 -4 4 -6 -7
+leaf_value=-0.042410565167665483 0.069777409372658569 0.002313222334935115 0.014181353932335265 0.0075421845371072939 -0.034700039277474087 -0.03317955051149641
+leaf_weight=24 29 26 21 22 24 21
+leaf_count=24 29 26 21 22 24 21
+internal_value=0 0.0378852 -0.0186044 -0.0261703 -0.0144972 -0.0381028
+internal_weight=0 55 112 91 46 45
+internal_count=167 55 112 91 46 45
+shrinkage=0.1
+
+
+Tree=2
+num_leaves=6
+num_cat=0
+split_feature=0 12 6 0 2
+split_gain=9.53425 5.05406 2.25035 1.19737 0.69063
+threshold=25.500000000000004 2.5000000000000004 3.5000000000000004 20.500000000000004 21.500000000000004
+decision_type=2 2 2 2 2
+left_child=2 -2 3 4 -1
+right_child=1 -3 -4 -5 -6
+leaf_value=-0.023319513860501743 0.062799670778471858 0.002081896708561824 0.01276321638198126 -0.0071964578827222198 -0.045274433364038885
+leaf_weight=38 29 26 21 30 23
+leaf_count=38 29 26 21 30 23
+internal_value=0 0.0340967 -0.0167439 -0.0235533 -0.0315976
+internal_weight=0 55 112 91 61
+internal_count=167 55 112 91 61
+shrinkage=0.1
+
+
+Tree=3
+num_leaves=6
+num_cat=0
+split_feature=0 12 6 8 15
+split_gain=7.72274 4.09379 1.82278 1.10289 0.486405
+threshold=25.500000000000004 2.5000000000000004 3.5000000000000004 9.5000000000000018 6.5000000000000009
+decision_type=2 2 2 2 2
+left_child=2 -2 3 4 -1
+right_child=1 -3 -4 -5 -6
+leaf_value=-0.020378456513086955 0.05651970320734484 0.0018737096052903396 0.011486893892288208 -0.006249492522329092 -0.038540519208743657
+leaf_weight=30 29 26 21 32 29
+leaf_count=30 29 26 21 32 29
+internal_value=0 0.0306871 -0.0150695 -0.0211979 -0.0293056
+internal_weight=0 55 112 91 59
+internal_count=167 55 112 91 59
+shrinkage=0.1
+
+
+Tree=4
+num_leaves=6
+num_cat=0
+split_feature=0 3 6 13 8
+split_gain=6.25542 3.55833 1.47646 0.998954 0.298212
+threshold=25.500000000000004 13.500000000000002 3.5000000000000004 7.5000000000000009 8.5000000000000018
+decision_type=2 2 2 2 2
+left_child=2 -2 3 4 -1
+right_child=1 -3 -4 -5 -6
+leaf_value=-0.031885489745017807 0.04760829701143153 -0.0047463439759754004 0.010338205099105836 -0.004851484019309283 -0.01686648488044739
+leaf_weight=39 34 21 21 32 20
+leaf_count=39 34 21 21 32 20
+internal_value=0 0.0276183 -0.0135626 -0.0190781 -0.0267943
+internal_weight=0 55 112 91 59
+internal_count=167 55 112 91 59
+shrinkage=0.1
+
+
+end of trees
+
+feature_importances:
+Column_0=7
+Column_6=5
+Column_12=4
+Column_8=3
+Column_2=2
+Column_3=1
+Column_7=1
+Column_11=1
+Column_13=1
+Column_15=1
+
+parameters:
+[boosting: gbdt]
+[objective: regression]
+[metric: l2]
+[tree_learner: serial]
+[device_type: cpu]
+[data: ]
+[valid: ]
+[num_iterations: 10000]
+[learning_rate: 0.1]
+[num_leaves: 31]
+[num_threads: 0]
+[deterministic: 0]
+[force_col_wise: 0]
+[force_row_wise: 0]
+[histogram_pool_size: -1]
+[max_depth: -1]
+[min_data_in_leaf: 20]
+[min_sum_hessian_in_leaf: 0.001]
+[bagging_fraction: 1]
+[pos_bagging_fraction: 1]
+[neg_bagging_fraction: 1]
+[bagging_freq: 0]
+[bagging_seed: 3]
+[feature_fraction: 1]
+[feature_fraction_bynode: 1]
+[feature_fraction_seed: 2]
+[extra_trees: 0]
+[extra_seed: 6]
+[early_stopping_round: 10]
+[first_metric_only: 0]
+[max_delta_step: 0]
+[lambda_l1: 0]
+[lambda_l2: 0]
+[min_gain_to_split: 0]
+[drop_rate: 0.1]
+[max_drop: 50]
+[skip_drop: 0.5]
+[xgboost_dart_mode: 0]
+[uniform_drop: 0]
+[drop_seed: 4]
+[top_rate: 0.2]
+[other_rate: 0.1]
+[min_data_per_group: 100]
+[max_cat_threshold: 32]
+[cat_l2: 10]
+[cat_smooth: 10]
+[max_cat_to_onehot: 4]
+[top_k: 20]
+[monotone_constraints: ]
+[monotone_constraints_method: basic]
+[monotone_penalty: 0]
+[feature_contri: ]
+[forcedsplits_filename: ]
+[refit_decay_rate: 0.9]
+[cegb_tradeoff: 1]
+[cegb_penalty_split: 0]
+[cegb_penalty_feature_lazy: ]
+[cegb_penalty_feature_coupled: ]
+[path_smooth: 0]
+[interaction_constraints: ]
+[verbosity: 1]
+[saved_feature_importance_type: 0]
+[max_bin: 255]
+[max_bin_by_feature: ]
+[min_data_in_bin: 3]
+[bin_construct_sample_cnt: 200000]
+[data_random_seed: 1]
+[is_enable_sparse: 1]
+[enable_bundle: 1]
+[use_missing: 1]
+[zero_as_missing: 0]
+[feature_pre_filter: 1]
+[pre_partition: 0]
+[two_round: 0]
+[header: 0]
+[label_column: ]
+[weight_column: ]
+[group_column: ]
+[ignore_column: ]
+[categorical_feature: ]
+[forcedbins_filename: ]
+[objective_seed: 5]
+[num_class: 1]
+[is_unbalance: 0]
+[scale_pos_weight: 1]
+[sigmoid: 1]
+[boost_from_average: 1]
+[reg_sqrt: 0]
+[alpha: 0.9]
+[fair_c: 1]
+[poisson_max_delta_step: 0.7]
+[tweedie_variance_power: 1.5]
+[lambdarank_truncation_level: 30]
+[lambdarank_norm: 1]
+[label_gain: ]
+[eval_at: ]
+[multi_error_top_k: 1]
+[auc_mu_weights: ]
+[num_machines: 1]
+[local_listen_port: 12400]
+[time_out: 120]
+[machine_list_filename: ]
+[machines: ]
+[gpu_platform_id: -1]
+[gpu_device_id: -1]
+[gpu_use_dp: 0]
+[num_gpu: 1]
+
+end of parameters
+
+pandas_categorical:null

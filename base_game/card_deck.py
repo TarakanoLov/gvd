@@ -35,15 +35,27 @@ class Random_card_deck:
             random.shuffle(self.all_cards)
             return self.new_card()
             
-    def to_array(self):
+    def to_array(self, player):
         arr = np.full((34 * 3,), 120)
         for ind, one_card in enumerate(self.all_cards):
             arr[cards.id_of(one_card)] = len(self.all_cards) - ind - 1
+        for in_hand in player.cards:
+            if in_hand.is_can_use(player):
+                arr[cards.id_of(in_hand)] = -2
+            else:
+                arr[cards.id_of(in_hand)] = -1
         return arr
 
 def card_deck_for_two(seed = None):
+    all_cards_first = []
+    all_cards_second = []
     rcd = Random_card_deck(seed)
-    arr_cards = [rcd.new_card() for i in range(len(rcd.all_cards)//2)]
     rcd2 = Random_card_deck()
-    rcd2.all_cards = arr_cards
+    for i in range(20):
+        some_cd = Random_card_deck(seed + i if seed is not None else None)
+        all_cards_second.extend([some_cd.new_card() for i in range(len(some_cd.all_cards)//2)])
+        all_cards_first.extend(some_cd.all_cards)
+    
+    rcd.all_cards = all_cards_first
+    rcd2.all_cards = all_cards_second
     return rcd, rcd2

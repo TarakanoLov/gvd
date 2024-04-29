@@ -13,8 +13,6 @@ from keras.optimizers import SGD
 import sys
 sys.path.insert(0, '..')
 
-import my_model
-
 from base_game import cards
 import learn_ai
 import helpers
@@ -24,7 +22,12 @@ from base_game import game
 
 from my_models.old_model_71.policy import Agent as OldAIagent
 from my_models.new_model_78.policy import Agent as myNewAIaget
-from my_models.current_model.policy import Agent as CurrentModel
+
+#from my_models.random_forest_actor_v1.policy import Agent as CurrentModel
+
+from my_models.current_model_v2.policy import Agent as CurrentModel
+
+#from my_models.current_model.policy import Agent as CurrentModel
 
 import os
 import copy
@@ -46,11 +49,13 @@ class TarakanAgent(player.Player):
         print('Я:', self)
         print('-----------')
         print('Соперник:', other)
+        arr_result = sorted(arr_result, key=lambda x : x[0])
+        
         for i, el in enumerate(arr_result):
             if el[0]:
-                print(i, el[1])
+                print(i, el[1].debug_str())
             else:
-                print(i, 'Сброс', el[1])
+                print(i, 'Сброс', el[1].debug_str())
         ind = int(input())
                 
         return arr_result[ind]
@@ -114,6 +119,8 @@ if __name__ == '__main__':
     win_ai_second = 0
     win_random_second = 0
     
+    win_first_random = False
+    win_two_games_random = 0
     
     make_ai_agent = lambda card_deck : CurrentModel(card_deck)
     #make_ai_agent = lambda card_deck : OldAIagent(card_deck)
@@ -121,7 +128,7 @@ if __name__ == '__main__':
     
     #make_random_agent = lambda card_deck : OldAIagent(card_deck)
     make_random_agent = lambda card_deck : CleverRandomAgent(card_deck)
-    
+    #make_random_agent = lambda card_deck : TarakanAgent(card_deck)
     
     for i in range(10000):
         rc1, rc2 = card_deck.card_deck_for_two()
@@ -132,11 +139,12 @@ if __name__ == '__main__':
         random_agent = make_random_agent(cp_rc2)
         
         this_game = game.Game(ai_agent, random_agent)
-        #print(json_data)
+
         if this_game.startPlay() == 0:
             win_ai_first += 1
         else:
             win_random_first += 1
+            win_first_random = True
         
         random_agent = make_random_agent(rc1)
         ai_agent = make_ai_agent(rc2)
@@ -145,11 +153,15 @@ if __name__ == '__main__':
 
         if this_game.startPlay() == 0:
             win_random_second += 1
+            if win_first_random:
+                win_two_games_random += 1
         else:
             win_ai_second += 1
+
+        win_first_random = False
         
         if i != 0 and i % 100 == 0:
             win_ai = win_ai_first + win_ai_second
             win_random = win_random_first + win_random_second
-            print('\rIteration: {}, winrate: {}%\tFirst: {}%, second {}%'.format(i, win_ai/(win_ai + win_random) * 100, win_ai_first/(win_ai_first + win_random_first) * 100, win_ai_second/(win_ai_second + win_random_second) * 100), end='')
+            print('\rIteration: {}, winrate: {}%\tFirst: {}%, second {}%, win two games from random {}%'.format(i, win_ai/(win_ai + win_random) * 100, win_ai_first/(win_ai_first + win_random_first) * 100, win_ai_second/(win_ai_second + win_random_second) * 100, win_two_games_random/i * 100), end='')
  
