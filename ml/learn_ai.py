@@ -181,7 +181,7 @@ if __name__ == '__main__':
             new_action_val_array[i][card_with_is_use[i]] = sss[i]
             new_card_to_use[i][card_with_is_use[i]] = 1
         
-        #CurrentModel.fit(new_all_game_situation, new_card_to_use, new_action_val_array)
+        CurrentModel.fit(new_all_game_situation, new_card_to_use, new_action_val_array)
         #ok_index = np.logical_and(cp_critic_predict > -0.7, cp_critic_predict < 0.7)
         #CurrentModel.fit(new_all_game_situation[ok_index], new_card_to_use[ok_index], new_action_val_array[ok_index])
         
@@ -207,20 +207,20 @@ if __name__ == '__main__':
         
         
         
-        base_inp = np.concatenate([new_all_game_situation, new_card_deck_hod], axis=1)
-        l = int(len(base_inp)*0.1)
-        idx = np.random.randint(len(base_inp), size=l)
-        critic_data_x.append(base_inp[idx, :])
-        critic_data_y.append(new_all_rewards[idx])
-        if iteration == 2 or iteration % 600 == 0:
-            cr_input = np.concatenate(critic_data_x, axis=0)
-            cr_output = np.concatenate(critic_data_y, axis=0)
-            #with open(f'x_train{iteration}.pkl', 'wb') as f:
-            #   pickle.dump(cr_input, f)
-            np.savez_compressed(f'x_train{iteration}.npz', cr_input)
-            #with open(f'y_train{iteration}.pkl', 'wb') as f2:
-            #   pickle.dump(cr_output, f2)
-            np.savez_compressed(f'y_train{iteration}.npz', cr_output)
-            critic_data_x = []
-            critic_data_y = []
+        # base_inp = np.concatenate([new_all_game_situation, new_card_deck_hod], axis=1)
+        # l = int(len(base_inp)*0.1)
+        # idx = np.random.randint(len(base_inp), size=l)
+        # critic_data_x.append(base_inp[idx, :])
+        # critic_data_y.append(new_all_rewards[idx])
+        # if iteration == 2 or iteration % 50 == 0:
+            # cr_input = np.concatenate(critic_data_x, axis=0)
+            # cr_output = np.concatenate(critic_data_y, axis=0)
+            # #with open(f'x_train{iteration}.pkl', 'wb') as f:
+            # #   pickle.dump(cr_input, f)
+            # np.savez_compressed(f'x_train{iteration}.npz', cr_input)
+            # #with open(f'y_train{iteration}.pkl', 'wb') as f2:
+            # #   pickle.dump(cr_output, f2)
+            # np.savez_compressed(f'y_train{iteration}.npz', cr_output)
+            # critic_data_x = []
+            # critic_data_y = []
         #critic.fit(base_inp, reward_for_critic, shuffle=True, batch_size=128, epochs=1, validation_split=0.9)

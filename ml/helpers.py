@@ -2,19 +2,28 @@ import random
 from base_game import cards
 import numpy as np
 
-def choose_move_from_array(arr, player, only_drop=False, eps=0.0):
+def choose_move_from_array(arr, player, only_drop=False, eps=0.2):
     arr_result = []
     count_can_use = 0
     for one_card in player.cards:
         if not only_drop and one_card.is_can_use(player):
             count_can_use += 1
-            arr_result.append((1, arr[cards.id_of(one_card)], one_card))
+            arr_result.append([1, arr[cards.id_of(one_card)], one_card])
         
-        arr_result.append((0, arr[len(cards.all_cards) + cards.id_of(one_card)], one_card))
+        arr_result.append([0, arr[len(cards.all_cards) + cards.id_of(one_card)], one_card])
         
-    if random.random() < eps:
-        return random.choice([(is_use, card) for is_use, _, card in arr_result])
+    if eps != 0.0:
+        noise = np.random.normal(0, 0.1, len(arr_result))
+        for i in range(len(arr_result)):
+            arr_result[i][1] += noise[i]
+        el = max(arr_result, key = lambda x : x[1])
+        return el[0], el[2]   
+        #return random.choices([(is_use, card) for is_use, _, card in arr_result], weights=[arr_result[i][1] + noise[i] for i in range(len(arr_result))])[0]
     else:
+        #if count_can_use != 0:
+        #    el = max([arr_result[i] for i in range(len(arr_result)) if arr_result[i][0]], key = lambda x : x[1])
+        #    return el[0], el[2]
+        #else:
         el = max(arr_result, key = lambda x : x[1])
         return el[0], el[2]
 

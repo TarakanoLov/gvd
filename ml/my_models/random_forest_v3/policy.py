@@ -37,7 +37,7 @@ class Critic:
     def __init__(self):
         if not Critic.is_load:
             Critic.is_load = True
-            Critic.bst = lgb.Booster(model_file='my_models/random_forest_v3/variants/v2_critic_0_145283.txt')
+            Critic.bst = lgb.Booster(model_file='my_models/random_forest_v3/variants/v4_critic_0_137879.txt')
                 
     def fit(self, x, y, *args, **kwargs):
         #Critic.model.fit(Critic.scaller.transform(x), y, *args, **kwargs)
