@@ -13,7 +13,7 @@ def choose_move_from_array(arr, player, only_drop=False, eps=0.2):
         arr_result.append([0, arr[len(cards.all_cards) + cards.id_of(one_card)], one_card])
         
     if eps != 0.0:
-        noise = np.random.normal(0, 0.1, len(arr_result))
+        noise = np.random.normal(0, 0.2, len(arr_result))
         for i in range(len(arr_result)):
             arr_result[i][1] += noise[i]
         el = max(arr_result, key = lambda x : x[1])

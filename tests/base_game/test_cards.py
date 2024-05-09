@@ -72,7 +72,8 @@ def test_is_can_use_squad():
     
 def test_use_ore():
     first, second = player.make_2_players(0)
-    card = first.cards[0]
+    card = cards.map_name_too_card['ВЕЛИКАЯ СТЕНА']
+    first.cards.append(card)
     first.ore = 8
     assert first.ore == 8
     assert first.mana == 5
@@ -90,7 +91,8 @@ def test_use_ore():
     
 def test_use_mana():
     first, second = player.make_2_players(4)
-    card = first.cards[0]
+    card = cards.map_name_too_card['КОПЬЕ']
+    first.cards.append(card)
     first.mana = 4
     assert first.ore == 5
     assert first.mana == 4
@@ -108,7 +110,8 @@ def test_use_mana():
     
 def test_use_squad():
     first, second = player.make_2_players(9)
-    card = first.cards[0]
+    card = cards.map_name_too_card['КАРЛИК']
+    first.cards.append(card)
     first.squad = 2
     assert first.ore == 5
     assert first.mana == 5

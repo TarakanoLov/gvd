@@ -19,7 +19,7 @@ class OneGameStats:
         return self.card_deck_hod, self.all_game_situation, self.card_to_use, self.gen_all_card_other, self.all_rewards, self.game_before_end
         
     def collect(self, player1, player2):
-        self.card_deck_hod.append(np.concatenate([player1.card_deck.to_array(), player2.card_deck.to_array()], axis=0))
+        self.card_deck_hod.append(np.concatenate([player1.card_deck.to_array(player2), player2.card_deck.to_array(player1)], axis=0))
         self.all_game_situation.append(player1.gen_array_input(player2)[0])
         self.card_to_use.append(player1.gen_my_all_card()[0])
         self.gen_all_card_other.append(player2.gen_my_all_card()[0])

@@ -60,11 +60,16 @@ def one_move_logic(player1, player2, card_with_is_use, card_deck_hod, all_game_s
         
 
 def calc_reward(current_rewards, win):
-    c = 1/(len(current_rewards) + 1)
+    # c = 1/(len(current_rewards) + 1)
+    # if win == 1:
+        # return [1 - c*(len(current_rewards) - i) for i in range(len(current_rewards))]
+    # elif win == -1:
+        # return [-1 + c*(len(current_rewards) - i) for i in range(len(current_rewards))]
     if win == 1:
-        return [1 - c*(len(current_rewards) - i) for i in range(len(current_rewards))]
+        return [0.95**(len(current_rewards) - i) for i in range(len(current_rewards))]
     elif win == -1:
-        return [-1 + c*(len(current_rewards) - i) for i in range(len(current_rewards))]
+        return [-(0.95**(len(current_rewards) - i)) for i in range(len(current_rewards))]
+    assert(False)
 
 if __name__ == '__main__':
     critic = Critic()
@@ -176,14 +181,14 @@ if __name__ == '__main__':
         reward_for_critic = np.clip(new_all_rewards, -1, 1)
 
         new_action_val_array = np.zeros((len(sss), 204))
-        new_card_to_use = np.zeros((len(sss), 204))
+        card_use = np.zeros((len(sss), 204))
         for i in range(len(sss)):
             new_action_val_array[i][card_with_is_use[i]] = sss[i]
-            new_card_to_use[i][card_with_is_use[i]] = 1
+            card_use[i][card_with_is_use[i]] = 1
         
-        CurrentModel.fit(new_all_game_situation, new_card_to_use, new_action_val_array)
+        CurrentModel.fit(new_all_game_situation, card_use, new_action_val_array)
         #ok_index = np.logical_and(cp_critic_predict > -0.7, cp_critic_predict < 0.7)
-        #CurrentModel.fit(new_all_game_situation[ok_index], new_card_to_use[ok_index], new_action_val_array[ok_index])
+        #CurrentModel.fit(new_all_game_situation[ok_index], card_use[ok_index], new_action_val_array[ok_index])
         
         # if more_data:
             # for i in range(len(sss)):
@@ -207,20 +212,20 @@ if __name__ == '__main__':
         
         
         
-        # base_inp = np.concatenate([new_all_game_situation, new_card_deck_hod], axis=1)
-        # l = int(len(base_inp)*0.1)
-        # idx = np.random.randint(len(base_inp), size=l)
-        # critic_data_x.append(base_inp[idx, :])
-        # critic_data_y.append(new_all_rewards[idx])
-        # if iteration == 2 or iteration % 50 == 0:
-            # cr_input = np.concatenate(critic_data_x, axis=0)
-            # cr_output = np.concatenate(critic_data_y, axis=0)
-            # #with open(f'x_train{iteration}.pkl', 'wb') as f:
-            # #   pickle.dump(cr_input, f)
-            # np.savez_compressed(f'x_train{iteration}.npz', cr_input)
-            # #with open(f'y_train{iteration}.pkl', 'wb') as f2:
-            # #   pickle.dump(cr_output, f2)
-            # np.savez_compressed(f'y_train{iteration}.npz', cr_output)
-            # critic_data_x = []
-            # critic_data_y = []
+        base_inp = np.concatenate([new_all_game_situation, new_card_deck_hod], axis=1)
+        l = int(len(base_inp)*0.1)
+        idx = np.random.randint(len(base_inp), size=l)
+        critic_data_x.append(base_inp[idx, :])
+        critic_data_y.append(new_all_rewards[idx])
+        if iteration % 2400 == 0:
+            cr_input = np.concatenate(critic_data_x, axis=0)
+            cr_output = np.concatenate(critic_data_y, axis=0)
+            #with open(f'x_train{iteration}.pkl', 'wb') as f:
+            #   pickle.dump(cr_input, f)
+            np.savez_compressed(f'x_train{iteration}.npz', cr_input)
+            #with open(f'y_train{iteration}.pkl', 'wb') as f2:
+            #   pickle.dump(cr_output, f2)
+            np.savez_compressed(f'y_train{iteration}.npz', cr_output)
+            critic_data_x = []
+            critic_data_y = []
         #critic.fit(base_inp, reward_for_critic, shuffle=True, batch_size=128, epochs=1, validation_split=0.9)
