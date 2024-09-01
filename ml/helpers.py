@@ -2,7 +2,7 @@ import random
 from base_game import cards
 import numpy as np
 
-def choose_move_from_array(arr, player, only_drop=False, eps=0.2):
+def choose_move_from_array(arr, player, only_drop=False, eps=0.0):
     arr_result = []
     count_can_use = 0
     for one_card in player.cards:
@@ -27,7 +27,7 @@ def choose_move_from_array(arr, player, only_drop=False, eps=0.2):
         el = max(arr_result, key = lambda x : x[1])
         return el[0], el[2]
 
-def print_for_learn(action_val, player1, player2, critic, all_game_situation, card_to_use, gen_all_card_other, card_deck_hod):
+def print_for_learn(action_val, player1, player2, critic, all_game_situation, card_to_use, gen_all_card_other, card_deck_hod, more_features):
     arr = []
     for i in range(len(action_val)):
         if cards.all_cards[i % len(cards.all_cards)] in player1.cards:
@@ -42,7 +42,7 @@ def print_for_learn(action_val, player1, player2, critic, all_game_situation, ca
     print('\n')
     print(player2)
     print('\n')
-    print('вероятность победы', (critic.predict(np.concatenate([all_game_situation[-1], card_deck_hod[-1]], axis=0).reshape(1, -1), verbose=0) + 1) / 2, '%')
+    print('вероятность победы', (critic.predict(np.concatenate([all_game_situation[-1], card_deck_hod[-1], more_features[-1]], axis=0).reshape(1, -1), verbose=0) + 1) / 2, '%')
     #print('вероятность победы', (critic.predict(np.concatenate([all_game_situation[-1], card_to_use[-1], gen_all_card_other[-1], card_deck_hod[-1]], axis=0).reshape(1, -1), verbose=0)))
     for i in range(len(arr)):
         print(arr[i][0], arr[i][1])
@@ -71,7 +71,28 @@ def calclulate_target_to_model(sss, new_all_rewards, game_before_end):
     assert len(new_all_rewards) == len(game_before_end)
     
     result = [0] * len(sss)
-    step = 3
+    step = 5
+    for i in range(len(sss)):
+        if i >= len(sss) - step or game_before_end[i] <= step:
+            if new_all_rewards[i] > 0:
+                result[i] = 0.9
+            else:
+                result[i] = -0.9
+        else:
+            if sss[i + step] > sss[i]:
+                result[i] = 0.9
+            elif sss[i + step] == sss[i]:
+                result[i] = 0.0
+            else:
+                result[i] = -0.9
+    return result
+    
+def second_calclulate_target_to_model(sss, new_all_rewards, game_before_end):
+    assert len(sss) == len(new_all_rewards)
+    assert len(new_all_rewards) == len(game_before_end)
+    
+    result = [0] * len(sss)
+    step = 5
     for i in range(len(sss)):
         if i >= len(sss) - step or game_before_end[i] <= step:
             if new_all_rewards[i] > 0:
@@ -117,3 +138,55 @@ def new_calclulate_target_to_model(critic_prediction, new_all_rewards, game_befo
                 print(critic_prediction[i], critic_prediction[i + step])
                 assert(False)
     return result
+
+from base_game import cards
+
+def more_features(player1, player2):
+    can_use_first = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    all_first = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    for one_card in player1.cards:
+        val = cards.test_card(one_card)
+        if one_card.is_can_use(player1):
+            can_use_first += val
+        all_first += val
+        
+    can_use_second = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    all_second = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    for one_card in player2.cards:
+        val = cards.test_card(one_card)
+        if one_card.is_can_use(player2):
+            can_use_second += val
+        all_second += val
+        
+    cards_first = [*player1.cards, *reversed(player1.card_deck.all_cards)]
+    first_more_cards_5 = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    first_more_cards_10 = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    first_more_cards_15 = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    for i in range(len(player1.cards) + 15):
+        val = cards.test_card(cards_first[i])
+        if i < len(player2.cards) + 5:
+            first_more_cards_5 += val
+            first_more_cards_10 += val
+            first_more_cards_15 += val
+        elif i < len(player2.cards) + 10:
+            first_more_cards_10 += val
+            first_more_cards_15 += val
+        else:
+            first_more_cards_15 += val
+            
+    cards_second = [*player2.cards, *reversed(player2.card_deck.all_cards)]
+    second_more_cards_5 = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    second_more_cards_10 = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    second_more_cards_15 = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    for i in range(len(player2.cards) + 15):
+        val = cards.test_card(cards_second[i])
+        if i < len(player2.cards) + 5:
+            second_more_cards_5 += val
+            second_more_cards_10 += val
+            second_more_cards_15 += val
+        elif i < len(player2.cards) + 10:
+            second_more_cards_10 += val
+            second_more_cards_15 += val
+        else:
+            second_more_cards_15 += val
+    return np.concatenate([can_use_first, all_first, can_use_second, all_second, first_more_cards_5, first_more_cards_10, first_more_cards_15, second_more_cards_5, second_more_cards_10, second_more_cards_15], axis=0)

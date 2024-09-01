@@ -133,3 +133,10 @@ def test_cards_type():
         assert card.cost >= 0
         assert card.index >= 0
         
+def test_test_card():
+    card = cards.map_name_too_card['КАРЛИК']
+    assert (cards.test_card(card) == [0, 3, 0, 0, 0, 0, 0, 0, 0, 0]).all()
+    
+    card = cards.map_name_too_card['РАДУГА']
+    assert (cards.test_card(card) == [-1,  0,  0,  0,  0,  1,  0,  0,  0,  0]).all()
+        

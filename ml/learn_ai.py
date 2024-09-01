@@ -16,7 +16,7 @@ import agent
 import helpers
 
 from my_models.current_model_v2.policy import Agent as CurrentModel
-from my_models.random_forest_v3.policy import Critic
+from my_models.random_forest_v4.policy import Critic
 
 n_games_per_update = 100
 n_max_steps = 1000
@@ -30,7 +30,7 @@ actor_data_y = [[] for i in range(204)]
 def isclose(a, b, abs_tol=0.001):
     return abs(a-b) <= abs_tol
     
-def one_move_logic(player1, player2, card_with_is_use, card_deck_hod, all_game_situation, card_to_use, gen_all_card_other, current_rewards, n, i):
+def one_move_logic(player1, player2, card_with_is_use, card_deck_hod, all_game_situation, card_to_use, gen_all_card_other, current_rewards, n, i, more_features):
     action_val, base = player1.make_predict(player2)                   
                     
     is_use, card_to_move = helpers.choose_move_from_array(action_val, player1, False)
@@ -45,9 +45,10 @@ def one_move_logic(player1, player2, card_with_is_use, card_deck_hod, all_game_s
     all_game_situation.append(player1.gen_array_input(player2)[0])
     card_to_use.append(player1.gen_my_all_card()[0])
     gen_all_card_other.append(player2.gen_my_all_card()[0])
+    more_features.append(helpers.more_features(player1, player2))
        
     if n == 0 and i == 10:
-        helpers.print_for_learn(action_val, player1, player2, critic, all_game_situation, card_to_use, gen_all_card_other, card_deck_hod)
+        helpers.print_for_learn(action_val, player1, player2, critic, all_game_situation, card_to_use, gen_all_card_other, card_deck_hod, more_features)
 
 
     current_rewards.append(player1.tower - player2.tower)                                  
@@ -60,11 +61,6 @@ def one_move_logic(player1, player2, card_with_is_use, card_deck_hod, all_game_s
         
 
 def calc_reward(current_rewards, win):
-    # c = 1/(len(current_rewards) + 1)
-    # if win == 1:
-        # return [1 - c*(len(current_rewards) - i) for i in range(len(current_rewards))]
-    # elif win == -1:
-        # return [-1 + c*(len(current_rewards) - i) for i in range(len(current_rewards))]
     if win == 1:
         return [0.95**(len(current_rewards) - i) for i in range(len(current_rewards))]
     elif win == -1:
@@ -84,6 +80,7 @@ if __name__ == '__main__':
         card_deck_hod_second = []
         gen_all_card_other = []
         card_with_is_use = []
+        more_features_first = []
         
         all_rewards_second = []
         all_game_situation_second = []    
@@ -96,6 +93,7 @@ if __name__ == '__main__':
         card_with_is_use_second = []                
         game_before_end = []
         game_before_end_second = []
+        more_features_second = []
         
         for n in range(n_games_per_update):
             rc1, rc2 = card_deck.card_deck_for_two()
@@ -107,14 +105,14 @@ if __name__ == '__main__':
             
             for i in range(n_max_steps):
                 player1.get_new_resource()
-                one_move_logic(player1, player2, card_with_is_use, card_deck_hod, all_game_situation, card_to_use, gen_all_card_other, current_rewards, n, i)
+                one_move_logic(player1, player2, card_with_is_use, card_deck_hod, all_game_situation, card_to_use, gen_all_card_other, current_rewards, n, i, more_features_first)
                         
                 if player1.game_ended(player2):
                     break
                     
 
                 player2.get_new_resource()
-                one_move_logic(player2, player1, card_with_is_use_second, card_deck_hod_second, all_game_situation_second, card_to_use_second, gen_all_card_other_second, current_rewards_second, n, i)
+                one_move_logic(player2, player1, card_with_is_use_second, card_deck_hod_second, all_game_situation_second, card_to_use_second, gen_all_card_other_second, current_rewards_second, n, i, more_features_second)
                 
                 if player2.game_ended(player1):
                     break
@@ -150,6 +148,7 @@ if __name__ == '__main__':
         all_rewards.extend(all_rewards_second)
         gen_all_card_other.extend(gen_all_card_other_second)
         card_with_is_use.extend(card_with_is_use_second)
+        more_features_first.extend(more_features_second)
         
         print('\n', len(all_rewards) / 2 / n_games_per_update)
 
@@ -161,7 +160,7 @@ if __name__ == '__main__':
 
         new_card_to_use = np.asarray(card_to_use)
         new_all_rewards = np.asarray(all_rewards)
-        sss = critic.predict(np.concatenate([new_all_game_situation, new_card_deck_hod], axis=1))
+        sss = critic.predict(np.concatenate([new_all_game_situation, new_card_deck_hod, more_features_first], axis=1))
         cp_critic_predict = sss
         sss = helpers.calclulate_target_to_model(sss, new_all_rewards, game_before_end)
         #sss = helpers.new_calclulate_target_to_model(sss, new_all_rewards, game_before_end)
@@ -186,9 +185,9 @@ if __name__ == '__main__':
             new_action_val_array[i][card_with_is_use[i]] = sss[i]
             card_use[i][card_with_is_use[i]] = 1
         
-        CurrentModel.fit(new_all_game_situation, card_use, new_action_val_array)
-        #ok_index = np.logical_and(cp_critic_predict > -0.7, cp_critic_predict < 0.7)
-        #CurrentModel.fit(new_all_game_situation[ok_index], card_use[ok_index], new_action_val_array[ok_index])
+        #CurrentModel.fit(new_all_game_situation, card_use, new_action_val_array)
+        ###############ok_index = np.logical_and(cp_critic_predict > -0.7, cp_critic_predict < 0.7)
+        ###############CurrentModel.fit(new_all_game_situation[ok_index], card_use[ok_index], new_action_val_array[ok_index])
         
         # if more_data:
             # for i in range(len(sss)):
@@ -212,20 +211,15 @@ if __name__ == '__main__':
         
         
         
-        base_inp = np.concatenate([new_all_game_situation, new_card_deck_hod], axis=1)
-        l = int(len(base_inp)*0.1)
+        base_inp = np.concatenate([new_all_game_situation, new_card_deck_hod, more_features_first], axis=1)
+        l = int(len(base_inp)*0.2)
         idx = np.random.randint(len(base_inp), size=l)
         critic_data_x.append(base_inp[idx, :])
         critic_data_y.append(new_all_rewards[idx])
-        if iteration % 2400 == 0:
+        if iteration % 1200 == 0:
             cr_input = np.concatenate(critic_data_x, axis=0)
             cr_output = np.concatenate(critic_data_y, axis=0)
-            #with open(f'x_train{iteration}.pkl', 'wb') as f:
-            #   pickle.dump(cr_input, f)
             np.savez_compressed(f'x_train{iteration}.npz', cr_input)
-            #with open(f'y_train{iteration}.pkl', 'wb') as f2:
-            #   pickle.dump(cr_output, f2)
             np.savez_compressed(f'y_train{iteration}.npz', cr_output)
             critic_data_x = []
             critic_data_y = []
-        #critic.fit(base_inp, reward_for_critic, shuffle=True, batch_size=128, epochs=1, validation_split=0.9)
